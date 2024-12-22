@@ -2,6 +2,8 @@ import { PlusCircle, Search } from 'lucide-react'
 import { Input } from './components/ui/input'
 import { Label } from './components/ui/label'
 import { Button } from './components/ui/button'
+import { getProducts } from './data/products'
+
 import {
   Table,
   TableBody,
@@ -19,8 +21,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useQuery } from '@tanstack/react-query'
 
 export function App() {
+  const { data: products } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts,
+  })
+
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-4">
       <h1 className="text-3xl font-bold">Produtos</h1>
@@ -81,12 +89,17 @@ export function App() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: 10 }).map((_, i) => {
+            {products?.map((product) => {
               return (
-                <TableRow key={i}>
-                  <TableCell>8asdg7812gdf8</TableCell>
-                  <TableCell>Produto {i}</TableCell>
-                  <TableCell>R$ 192,00</TableCell>
+                <TableRow key={product.id}>
+                  <TableCell>{product.id}</TableCell>
+                  <TableCell>{product.name}</TableCell>
+                  <TableCell>
+                    {new Intl.NumberFormat('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    }).format(Number(product.price))}
+                  </TableCell>
                 </TableRow>
               )
             })}
