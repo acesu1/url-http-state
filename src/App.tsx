@@ -22,6 +22,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useQuery } from '@tanstack/react-query'
+import { ProductsFilters } from './components/products-filters'
 
 export function App() {
   const { data: products } = useQuery({
@@ -34,14 +35,7 @@ export function App() {
       <h1 className="text-3xl font-bold">Produtos</h1>
 
       <div className="flex items-center justify-between">
-        <form className="flex items-center gap-2">
-          <Input name="id" placeholder="ID do pedido" />
-          <Input name="nome" placeholder="Nome do produto" />
-          <Button type="submit" variant="link">
-            <Search className="mr-2 size-3" />
-            Filtrar produtos
-          </Button>
-        </form>
+        <ProductsFilters />
 
         <Dialog>
           <DialogTrigger asChild>
