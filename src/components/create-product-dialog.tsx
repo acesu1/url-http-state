@@ -1,3 +1,6 @@
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
@@ -9,7 +12,22 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
+const createProductSchema = z.object({
+  name: z.string(),
+  price: z.coerce.number(),
+})
+
+type CreateProductSchema = z.infer<typeof createProductSchema>
+
 export function CreateProductDialog() {
+  const { register, handleSubmit } = useForm<CreateProductSchema>({
+    resolver: zodResolver(createProductSchema),
+  })
+
+  function handleCreateProduct(data: CreateProductSchema) {
+    console.log(data)
+  }
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -19,15 +37,15 @@ export function CreateProductDialog() {
         </DialogDescription>
       </DialogHeader>
 
-      <form className="space-y-6">
+      <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-6">
         <div className="grid grid-cols-4 items-center text-right gap-3">
           <Label htmlFor="name">Produto</Label>
-          <Input className="col-span-3" id="name" />
+          <Input className="col-span-3" id="name" {...register('name')} />
         </div>
 
         <div className="grid grid-cols-4 items-center text-right gap-3">
           <Label htmlFor="price">Preço</Label>
-          <Input className="col-span-3" id="price" />
+          <Input className="col-span-3" id="price" {...register('price')} />
         </div>
 
         <DialogFooter>
