@@ -1,6 +1,6 @@
 import { PlusCircle } from 'lucide-react'
-import { Button } from './components/ui/button'
-import { getProducts } from './data/products'
+import { Button } from '../components/ui/button'
+import { getProducts } from '../data/products'
 
 import {
   Table,
@@ -15,13 +15,24 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useQuery } from '@tanstack/react-query'
-import { ProductsFilters } from './components/products-filters'
-import { CreateProductDialog } from './components/create-product-dialog'
+import { ProductsFilters } from '../components/products-filters'
+import { CreateProductDialog } from '../components/create-product-dialog'
+import { useSearchParams } from 'react-router-dom'
 
-export function App() {
+export function Products() {
+  const [searchParams] = useSearchParams()
+
+  const id = searchParams.get('id')
+  const name = searchParams.get('name')
+
+  console.log({ id, name })
+
   const { data: products } = useQuery({
-    queryKey: ['products'],
-    queryFn: getProducts,
+    queryKey: ['products', id, name],
+    queryFn: () => getProducts({
+      id,
+      name,
+    }),
   })
 
   return (
